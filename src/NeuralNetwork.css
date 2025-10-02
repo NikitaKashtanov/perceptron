@@ -1,0 +1,338 @@
+.neural-network {
+  margin: 20px 0;
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 10px;
+  border: 1px solid #e9ecef;
+}
+
+.neural-network h3 {
+  margin-bottom: 20px;
+  color: #495057;
+  font-size: 1.4em;
+  text-align: center;
+}
+
+.training-section {
+  margin-bottom: 20px;
+  padding: 15px;
+  background-color: white;
+  border-radius: 8px;
+  border: 1px solid #dee2e6;
+}
+
+.training-controls {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 15px;
+  flex-wrap: wrap;
+}
+
+.training-toggle {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background-color: #6c757d;
+  color: white;
+}
+
+.training-toggle.active {
+  background-color: #28a745;
+}
+
+.training-toggle:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.training-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background-color: #d4edda;
+  border-radius: 6px;
+  color: #155724;
+  font-weight: bold;
+}
+
+.indicator-dot {
+  width: 8px;
+  height: 8px;
+  background-color: #28a745;
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.5; }
+  100% { opacity: 1; }
+}
+
+.training-input {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.training-input label {
+  font-weight: bold;
+  color: #495057;
+}
+
+.digit-input {
+  padding: 8px 12px;
+  border: 2px solid #dee2e6;
+  border-radius: 6px;
+  font-size: 16px;
+  width: 60px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.digit-input:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+.train-button {
+  padding: 8px 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.train-button:hover:not(:disabled) {
+  background-color: #0056b3;
+  transform: translateY(-1px);
+}
+
+.train-button:disabled {
+  background-color: #6c757d;
+  cursor: not-allowed;
+}
+
+.settings-section {
+  margin: 20px 0;
+  padding: 15px;
+  background-color: white;
+  border-radius: 8px;
+  border: 1px solid #dee2e6;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.settings-section label {
+  font-weight: bold;
+  color: #495057;
+}
+
+.learning-rate-slider {
+  width: 150px;
+}
+
+.learning-rate-value {
+  font-weight: bold;
+  color: #007bff;
+  min-width: 50px;
+}
+
+.clear-weights-button {
+  padding: 8px 16px;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.clear-weights-button:hover {
+  background-color: #c82333;
+  transform: translateY(-1px);
+}
+
+.recognition-section {
+  margin: 20px 0;
+  padding: 15px;
+  background-color: white;
+  border-radius: 8px;
+  border: 1px solid #dee2e6;
+}
+
+.recognition-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.recognition-header h4 {
+  margin: 0;
+  color: #495057;
+  font-size: 1.2em;
+}
+
+.recognize-button {
+  padding: 8px 16px;
+  background-color: #17a2b8;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.recognize-button:hover {
+  background-color: #138496;
+  transform: translateY(-1px);
+}
+
+.no-prediction {
+  text-align: center;
+  padding: 20px;
+  color: #6c757d;
+  font-style: italic;
+}
+
+.predictions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.prediction-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px;
+  background-color: #f8f9fa;
+  border-radius: 6px;
+}
+
+.prediction-item .digit {
+  font-weight: bold;
+  font-size: 1.2em;
+  color: #495057;
+  min-width: 20px;
+}
+
+.confidence-bar {
+  flex: 1;
+  height: 20px;
+  background-color: #e9ecef;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.confidence-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #dc3545, #ffc107, #28a745);
+  transition: width 0.3s ease;
+}
+
+.confidence-value {
+  font-weight: bold;
+  color: #495057;
+  min-width: 50px;
+  text-align: right;
+}
+
+.final-prediction {
+  text-align: center;
+  padding: 15px;
+  background-color: #e7f3ff;
+  border-radius: 8px;
+  border: 2px solid #007bff;
+  font-size: 1.3em;
+  color: #007bff;
+}
+
+.training-history {
+  margin: 20px 0;
+  padding: 15px;
+  background-color: white;
+  border-radius: 8px;
+  border: 1px solid #dee2e6;
+}
+
+.training-history h4 {
+  margin-bottom: 15px;
+  color: #495057;
+  font-size: 1.2em;
+}
+
+.history-list {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.history-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  margin-bottom: 5px;
+  background-color: #f8f9fa;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
+.history-item .time {
+  color: #6c757d;
+  font-family: 'Courier New', monospace;
+}
+
+.history-item .digit {
+  font-weight: bold;
+  color: #495057;
+}
+
+.history-item .pixels {
+  color: #6c757d;
+}
+
+@media (max-width: 768px) {
+  .training-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .training-input {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .settings-section {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .recognition-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .predictions-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
