@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Нейросеть для распознавания цифр с обучением",
   "main": "index.js",
-  "homepage": ".",
+  "homepage": "/",
   "scripts": {
     "start": "webpack serve --mode development --open",
     "build": "webpack --mode production",
