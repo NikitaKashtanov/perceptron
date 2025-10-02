@@ -1,0 +1,34 @@
+{
+  "models": [
+    {
+      "name": "quick-model-2025-10-02T22-34-58",
+      "type": "quick",
+      "description": "Быстрая модель для тестирования"
+    },
+    {
+      "name": "realistic-model-2025-10-02T22-43-27",
+      "type": "realistic",
+      "description": "Модель обучена на реалистичных изображениях цифр"
+    },
+    {
+      "name": "multi-realistic-model-2025-10-02T22-47-35",
+      "type": "multi-realistic",
+      "description": "Модель обучена на множественных реалистичных изображениях (10 вариаций на цифру)"
+    },
+    {
+      "name": "improved-model-2025-10-02T22-51-15",
+      "type": "improved",
+      "description": "Улучшенная модель (20x30, 4 вариации на цифру)"
+    },
+    {
+      "name": "user-model-2025-10-02T22-56-22",
+      "type": "manual",
+      "description": "Ручное обучение (6 примеров)"
+    },
+    {
+      "name": "user-model-2025-10-02T23-09-45",
+      "type": "manual",
+      "description": "Ручное обучение (6 примеров) - создано в Вильнюсе 02.10.2025 в 02:09"
+    }
+  ]
+}

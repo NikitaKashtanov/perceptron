@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { loadTrainedModel, saveModelToFile, applyTrainedModel, restoreBackupModel, isModelCompatible } from './modelUtils';
-import { trainNeuralNetwork } from './neuralNetworkTrainer';
+import { loadTrainedModel, saveModelToFile, saveModelWithName, applyTrainedModel, restoreBackupModel, isModelCompatible, loadModelByName } from './modelUtils';
+import { trainSimpleNeuralNetwork } from './simpleNeuralNetwork';
+import ModelSelector from './ModelSelector';
 import './NeuralNetwork.css';
 
 const NeuralNetwork = ({ pixelData, canvasWidth = 100, canvasHeight = 100 }) => {
@@ -15,6 +16,7 @@ const NeuralNetwork = ({ pixelData, canvasWidth = 100, canvasHeight = 100 }) => 
   const [isUsingTrainedModel, setIsUsingTrainedModel] = useState(false);
   const [modelStatus, setModelStatus] = useState('');
   const [isTrainingModel, setIsTrainingModel] = useState(false);
+  const [selectedModelName, setSelectedModelName] = useState('');
 
   const totalPixels = canvasWidth * canvasHeight;
 
@@ -165,8 +167,10 @@ const NeuralNetwork = ({ pixelData, canvasWidth = 100, canvasHeight = 100 }) => 
       return;
     }
     
-    if (!isModelCompatible(modelData, canvasWidth)) {
-      setModelStatus(`Модель несовместима. Размер канваса: ${canvasWidth}x${canvasHeight}, модель: ${modelData.metadata.canvasSize}x${modelData.metadata.canvasSize}`);
+    if (!isModelCompatible(modelData, canvasWidth, canvasHeight)) {
+      const modelWidth = modelData.metadata.canvasWidth || modelData.metadata.canvasSize;
+      const modelHeight = modelData.metadata.canvasHeight || modelData.metadata.canvasSize;
+      setModelStatus(`Модель несовместима. Размер канваса: ${canvasWidth}x${canvasHeight}, модель: ${modelWidth}x${modelHeight}`);
       return;
     }
     
@@ -195,9 +199,26 @@ const NeuralNetwork = ({ pixelData, canvasWidth = 100, canvasHeight = 100 }) => 
   // Сохранение текущей модели в файл
   const handleSaveModelToFile = () => {
     try {
-      const modelData = saveModelToFile(weights, biases, canvasWidth);
-      setModelStatus('Модель сохранена в файл');
+      // Проверяем, есть ли обученные данные
+      const hasTrainingData = Object.keys(weights).length > 0 && 
+                             Object.values(weights).some(w => w && w.length > 0);
+      
+      if (!hasTrainingData) {
+        setModelStatus('Нет данных для сохранения. Сначала обучите модель на примерах.');
+        return;
+      }
+      
+      // Создаем описание на основе истории обучения
+      const trainingCount = trainingHistory.length;
+      const description = `Ручное обучение (${trainingCount} примеров)`;
+      
+      const { modelData, modelName } = saveModelWithName(weights, biases, canvasWidth, canvasHeight, description);
+      
+      setModelStatus(`Модель "${modelName}" скачана! Проверьте консоль для инструкций по добавлению в список моделей.`);
+      setSelectedModelName(modelName);
+      
     } catch (error) {
+      console.error('Ошибка сохранения модели:', error);
       setModelStatus('Ошибка сохранения модели');
     }
   };
@@ -220,7 +241,7 @@ const NeuralNetwork = ({ pixelData, canvasWidth = 100, canvasHeight = 100 }) => 
     setModelStatus('Обучение модели... Это может занять несколько секунд');
     
     try {
-      const newModel = await trainNeuralNetwork(canvasWidth);
+      const newModel = await trainSimpleNeuralNetwork(canvasWidth, canvasHeight);
       
       // Применяем новую модель
       const success = applyTrainedModel(newModel);
@@ -238,6 +259,36 @@ const NeuralNetwork = ({ pixelData, canvasWidth = 100, canvasHeight = 100 }) => 
     } finally {
       setIsTrainingModel(false);
     }
+  };
+
+  // Обработчик выбора модели из ModelSelector
+  const handleModelSelect = (modelData, modelName) => {
+    if (!modelData) return;
+    
+    // Проверяем совместимость модели
+    if (!isModelCompatible(modelData, canvasWidth, canvasHeight)) {
+      const modelWidth = modelData.metadata.canvasWidth || modelData.metadata.canvasSize;
+      const modelHeight = modelData.metadata.canvasHeight || modelData.metadata.canvasSize;
+      setModelStatus(`Модель ${modelName} несовместима с размером канваса ${canvasWidth}x${canvasHeight} (модель: ${modelWidth}x${modelHeight})`);
+      return;
+    }
+    
+    // Применяем выбранную модель
+    const success = applyTrainedModel(modelData);
+    if (success) {
+      setTrainedModel(modelData);
+      setIsUsingTrainedModel(true);
+      setSelectedModelName(modelName);
+      setModelStatus(`Загружена модель: ${modelName}`);
+      loadFromLocalStorage();
+    } else {
+      setModelStatus('Ошибка применения выбранной модели');
+    }
+  };
+
+  // Обработчик обновления списка моделей
+  const handleModelRefresh = () => {
+    setModelStatus('Список моделей обновлен');
   };
 
   // Инициализация при загрузке
@@ -326,6 +377,13 @@ const NeuralNetwork = ({ pixelData, canvasWidth = 100, canvasHeight = 100 }) => 
         </button>
       </div>
 
+      {/* Выбор модели */}
+      <ModelSelector
+        onModelSelect={handleModelSelect}
+        selectedModel={selectedModelName}
+        onRefresh={handleModelRefresh}
+      />
+
       {/* Управление предобученной моделью */}
       <div className="model-management-section">
         <h4>Управление предобученной моделью</h4>
@@ -374,6 +432,26 @@ const NeuralNetwork = ({ pixelData, canvasWidth = 100, canvasHeight = 100 }) => 
             <strong>Статус:</strong> {modelStatus}
           </div>
         )}
+
+        {/* Информация о текущей модели */}
+        <div className="current-model-info">
+          <h5>Текущая модель:</h5>
+          <div className="model-description">
+            {isUsingTrainedModel && trainedModel ? (
+              <div className="trained-model-active">
+                <span className="model-type">🤖 Предобученная модель</span>
+                <span className="model-desc">{trainedModel.metadata.description}</span>
+                <span className="model-date">Создана: {trainedModel.metadata.created}</span>
+              </div>
+            ) : (
+              <div className="manual-model-active">
+                <span className="model-type">✋ Ручное обучение</span>
+                <span className="model-desc">Модель обучена вручную на ваших примерах</span>
+                <span className="model-examples">Примеров обучения: {trainingHistory.length}</span>
+              </div>
+            )}
+          </div>
+        </div>
         
         {trainedModel && (
           <div className="model-info">
@@ -381,7 +459,7 @@ const NeuralNetwork = ({ pixelData, canvasWidth = 100, canvasHeight = 100 }) => 
             <ul>
               <li><strong>Описание:</strong> {trainedModel.metadata.description}</li>
               <li><strong>Дата создания:</strong> {trainedModel.metadata.created}</li>
-              <li><strong>Размер канваса:</strong> {trainedModel.metadata.canvasSize}x{trainedModel.metadata.canvasSize}</li>
+              <li><strong>Размер канваса:</strong> {trainedModel.metadata.canvasWidth || trainedModel.metadata.canvasSize}x{trainedModel.metadata.canvasHeight || trainedModel.metadata.canvasSize}</li>
               <li><strong>Всего пикселей:</strong> {trainedModel.metadata.totalPixels}</li>
             </ul>
           </div>

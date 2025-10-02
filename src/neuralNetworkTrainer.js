@@ -1,8 +1,16 @@
 // Алгоритм обучения нейросети для распознавания цифр
 
-// Сигмоидальная функция
+// Сигмоидальная функция с защитой от переполнения
 const sigmoid = (x) => {
-  return 1 / (1 + Math.exp(-x));
+  // Ограничиваем x для избежания переполнения
+  x = Math.max(-500, Math.min(500, x));
+  
+  if (x >= 0) {
+    return 1 / (1 + Math.exp(-x));
+  } else {
+    const expX = Math.exp(x);
+    return expX / (1 + expX);
+  }
 };
 
 // Производная сигмоидальной функции
@@ -17,10 +25,13 @@ const initializeWeights = (inputSize, outputSize) => {
   const biases = {};
   
   for (let digit = 0; digit <= 9; digit++) {
-    weights[digit] = new Array(inputSize).fill(0).map(() => 
-      Math.random() * 0.1 - 0.05
-    );
-    biases[digit] = Math.random() * 0.1 - 0.05;
+    weights[digit] = new Array(inputSize).fill(0).map(() => {
+      const weight = Math.random() * 0.02 - 0.01; // Меньший диапазон
+      return isNaN(weight) ? 0 : weight;
+    });
+    
+    const bias = Math.random() * 0.02 - 0.01;
+    biases[digit] = isNaN(bias) ? 0 : bias;
   }
   
   return { weights, biases };
@@ -31,16 +42,32 @@ const predictDigit = (input, weights, biases, digit) => {
   let sum = biases[digit] || 0;
   
   for (let i = 0; i < input.length; i++) {
-    sum += input[i] * weights[digit][i];
+    const weight = weights[digit][i] || 0;
+    const pixel = input[i] || 0;
+    const product = weight * pixel;
+    
+    if (!isNaN(product)) {
+      sum += product;
+    }
   }
   
-  return sigmoid(sum);
+  // Ограничиваем сумму для избежания переполнения
+  sum = Math.max(-10, Math.min(10, sum));
+  
+  const result = sigmoid(sum);
+  return isNaN(result) ? 0.5 : result;
 };
 
 // Обучение на одном примере
 const trainOnExample = (input, target, weights, biases, learningRate) => {
-  const newWeights = { ...weights };
-  const newBiases = { ...biases };
+  const newWeights = {};
+  const newBiases = {};
+  
+  // Копируем веса и смещения
+  for (let digit = 0; digit <= 9; digit++) {
+    newWeights[digit] = [...weights[digit]];
+    newBiases[digit] = biases[digit];
+  }
   
   // Обновляем веса для всех цифр
   for (let digit = 0; digit <= 9; digit++) {
@@ -48,19 +75,31 @@ const trainOnExample = (input, target, weights, biases, learningRate) => {
     const targetValue = (digit === target) ? 1 : 0;
     const error = targetValue - prediction;
     
-    // Обновляем веса
-    for (let i = 0; i < input.length; i++) {
-      newWeights[digit][i] += error * input[i] * learningRate;
+    // Проверяем на NaN
+    if (isNaN(error) || isNaN(prediction)) {
+      console.warn(`NaN detected: digit=${digit}, prediction=${prediction}, error=${error}`);
+      continue;
     }
     
-    newBiases[digit] += error * learningRate;
+    // Обновляем веса
+    for (let i = 0; i < input.length; i++) {
+      const weightUpdate = error * input[i] * learningRate;
+      if (!isNaN(weightUpdate)) {
+        newWeights[digit][i] += weightUpdate;
+      }
+    }
+    
+    const biasUpdate = error * learningRate;
+    if (!isNaN(biasUpdate)) {
+      newBiases[digit] += biasUpdate;
+    }
   }
   
   return { weights: newWeights, biases: newBiases };
 };
 
 // Обучение на всем наборе данных
-const trainNetwork = (trainingData, epochs = 100, learningRate = 0.01) => {
+const trainNetwork = (trainingData, epochs = 50, learningRate = 0.005) => {
   const inputSize = trainingData[0].input.length;
   let { weights, biases } = initializeWeights(inputSize, 10);
   
@@ -133,8 +172,8 @@ const createModelJSON = (weights, biases, canvasSize, accuracy) => {
       canvasSize: canvasSize,
       totalPixels: canvasSize * canvasSize,
       description: `Предобученная модель с точностью ${accuracy.toFixed(2)}%`,
-      trainingEpochs: 100,
-      learningRate: 0.01,
+      trainingEpochs: 50,
+      learningRate: 0.005,
       trainingExamples: canvasSize * canvasSize * 5 // 5 вариантов каждой цифры
     }
   };

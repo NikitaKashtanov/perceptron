@@ -1,0 +1,125 @@
+.model-selector {
+  background: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  padding: 16px;
+  margin: 16px 0;
+}
+
+.model-selector-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.model-selector-header h4 {
+  margin: 0;
+  color: #495057;
+}
+
+.refresh-button {
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s;
+}
+
+.refresh-button:hover:not(:disabled) {
+  background: #0056b3;
+}
+
+.refresh-button:disabled {
+  background: #6c757d;
+  cursor: not-allowed;
+}
+
+.error-message {
+  background: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+  border-radius: 4px;
+  padding: 12px;
+  margin-bottom: 16px;
+}
+
+.loading-message {
+  text-align: center;
+  padding: 20px;
+  color: #6c757d;
+}
+
+.no-models {
+  text-align: center;
+  padding: 20px;
+  color: #6c757d;
+  background: #f8f9fa;
+  border-radius: 4px;
+}
+
+.models-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.model-item {
+  background: white;
+  border: 2px solid #e9ecef;
+  border-radius: 6px;
+  padding: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.model-item:hover {
+  border-color: #007bff;
+  box-shadow: 0 2px 4px rgba(0, 123, 255, 0.1);
+}
+
+.model-item.selected {
+  border-color: #28a745;
+  background: #f8fff9;
+}
+
+.model-name {
+  font-weight: bold;
+  color: #495057;
+  margin-bottom: 4px;
+}
+
+.model-description {
+  color: #6c757d;
+  font-size: 14px;
+  margin-bottom: 8px;
+  line-height: 1.4;
+  word-wrap: break-word;
+  white-space: normal;
+  max-height: none;
+}
+
+.model-details {
+  display: flex;
+  gap: 12px;
+  font-size: 12px;
+  color: #868e96;
+}
+
+.model-details span {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.selected-model-info {
+  margin-top: 16px;
+  padding: 12px;
+  background: #d4edda;
+  border: 1px solid #c3e6cb;
+  border-radius: 4px;
+  color: #155724;
+}

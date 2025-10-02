@@ -298,6 +298,71 @@
   font-size: 14px;
 }
 
+.current-model-info {
+  margin: 15px 0;
+  padding: 15px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  border: 2px solid #dee2e6;
+}
+
+.current-model-info h5 {
+  margin-bottom: 10px;
+  color: #495057;
+  font-size: 1.1em;
+  text-align: center;
+}
+
+.model-description {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.trained-model-active, .manual-model-active {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 10px;
+  border-radius: 6px;
+}
+
+.trained-model-active {
+  background-color: #d4edda;
+  border: 1px solid #c3e6cb;
+}
+
+.manual-model-active {
+  background-color: #fff3cd;
+  border: 1px solid #ffeaa7;
+}
+
+.model-type {
+  font-weight: bold;
+  font-size: 16px;
+  color: #155724;
+}
+
+.manual-model-active .model-type {
+  color: #856404;
+}
+
+.model-desc {
+  font-size: 14px;
+  color: #155724;
+  font-style: italic;
+}
+
+.manual-model-active .model-desc {
+  color: #856404;
+}
+
+.model-date, .model-examples {
+  font-size: 12px;
+  color: #6c757d;
+  font-family: 'Courier New', monospace;
+}
+
 .recognition-section {
   margin: 20px 0;
   padding: 15px;

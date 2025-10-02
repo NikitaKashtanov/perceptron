@@ -6,16 +6,24 @@ import './App.css';
 
 function App() {
   const [pixelData, setPixelData] = useState(null);
-  const [canvasSize, setCanvasSize] = useState(30);
+  const [canvasWidth, setCanvasWidth] = useState(20);
+  const [canvasHeight, setCanvasHeight] = useState(30);
 
   const handlePixelDataChange = (data) => {
     setPixelData(data);
   };
 
-  const handleCanvasSizeChange = (event) => {
-    const newSize = parseInt(event.target.value);
-    if (newSize >= 20 && newSize <= 100) {
-      setCanvasSize(newSize);
+  const handleCanvasWidthChange = (event) => {
+    const newWidth = parseInt(event.target.value);
+    if (newWidth >= 15 && newWidth <= 50) {
+      setCanvasWidth(newWidth);
+    }
+  };
+
+  const handleCanvasHeightChange = (event) => {
+    const newHeight = parseInt(event.target.value);
+    if (newHeight >= 20 && newHeight <= 60) {
+      setCanvasHeight(newHeight);
     }
   };
 
@@ -26,35 +34,46 @@ function App() {
         <p>Рисуйте цифры на канвасе и анализируйте пиксельные данные</p>
         
         <div className="canvas-size-control">
-          <label htmlFor="canvas-size">Размер канваса: </label>
+          <label htmlFor="canvas-width">Ширина канваса: </label>
           <input
-            id="canvas-size"
+            id="canvas-width"
+            type="number"
+            min="15"
+            max="50"
+            value={canvasWidth}
+            onChange={handleCanvasWidthChange}
+            className="size-input"
+          />
+          <span>×</span>
+          <label htmlFor="canvas-height">Высота канваса: </label>
+          <input
+            id="canvas-height"
             type="number"
             min="20"
-            max="100"
-            value={canvasSize}
-            onChange={handleCanvasSizeChange}
+            max="60"
+            value={canvasHeight}
+            onChange={handleCanvasHeightChange}
             className="size-input"
           />
           <span>пикселей</span>
         </div>
 
         <Canvas 
-          width={canvasSize} 
-          height={canvasSize} 
+          width={canvasWidth} 
+          height={canvasHeight} 
           onPixelDataChange={handlePixelDataChange}
         />
 
         <PixelProcessor 
           pixelData={pixelData} 
-          canvasWidth={canvasSize} 
-          canvasHeight={canvasSize}
+          canvasWidth={canvasWidth} 
+          canvasHeight={canvasHeight} 
         />
 
         <NeuralNetwork 
           pixelData={pixelData} 
-          canvasWidth={canvasSize} 
-          canvasHeight={canvasSize}
+          canvasWidth={canvasWidth} 
+          canvasHeight={canvasHeight} 
         />
 
         <div className="info-section">
