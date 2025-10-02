@@ -10,7 +10,14 @@
     "dev": "webpack serve --mode development",
     "deploy": "npm run build && vercel --prod"
   },
-  "keywords": ["react", "neural-network", "machine-learning", "digit-recognition", "canvas", "javascript"],
+  "keywords": [
+    "react",
+    "neural-network",
+    "machine-learning",
+    "digit-recognition",
+    "canvas",
+    "javascript"
+  ],
   "author": "",
   "license": "MIT",
   "dependencies": {
@@ -22,6 +29,7 @@
     "@babel/preset-env": "^7.22.0",
     "@babel/preset-react": "^7.22.0",
     "babel-loader": "^9.1.0",
+    "copy-webpack-plugin": "^13.0.1",
     "css-loader": "^6.8.0",
     "html-webpack-plugin": "^5.5.0",
     "style-loader": "^3.3.0",
