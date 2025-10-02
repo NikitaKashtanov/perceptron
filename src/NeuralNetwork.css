@@ -188,7 +188,7 @@
   margin-bottom: 15px;
 }
 
-.load-model-button, .use-model-button, .save-model-button, .restore-backup-button {
+.train-model-button, .load-model-button, .use-model-button, .save-model-button, .restore-backup-button {
   padding: 10px 15px;
   border: none;
   border-radius: 6px;
@@ -196,6 +196,21 @@
   cursor: pointer;
   transition: all 0.3s ease;
   font-size: 14px;
+}
+
+.train-model-button {
+  background-color: #dc3545;
+  color: white;
+}
+
+.train-model-button:hover:not(:disabled) {
+  background-color: #c82333;
+  transform: translateY(-1px);
+}
+
+.train-model-button:disabled {
+  background-color: #6c757d;
+  cursor: not-allowed;
 }
 
 .load-model-button {

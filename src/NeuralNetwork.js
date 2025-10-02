@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { loadTrainedModel, saveModelToFile, applyTrainedModel, restoreBackupModel, isModelCompatible } from './modelUtils';
+import { trainNeuralNetwork } from './neuralNetworkTrainer';
 import './NeuralNetwork.css';
 
 const NeuralNetwork = ({ pixelData, canvasWidth = 100, canvasHeight = 100 }) => {
@@ -13,6 +14,7 @@ const NeuralNetwork = ({ pixelData, canvasWidth = 100, canvasHeight = 100 }) => 
   const [trainedModel, setTrainedModel] = useState(null);
   const [isUsingTrainedModel, setIsUsingTrainedModel] = useState(false);
   const [modelStatus, setModelStatus] = useState('');
+  const [isTrainingModel, setIsTrainingModel] = useState(false);
 
   const totalPixels = canvasWidth * canvasHeight;
 
@@ -212,6 +214,32 @@ const NeuralNetwork = ({ pixelData, canvasWidth = 100, canvasHeight = 100 }) => 
     }
   };
 
+  // Обучение новой модели
+  const handleTrainNewModel = async () => {
+    setIsTrainingModel(true);
+    setModelStatus('Обучение модели... Это может занять несколько секунд');
+    
+    try {
+      const newModel = await trainNeuralNetwork(canvasWidth);
+      
+      // Применяем новую модель
+      const success = applyTrainedModel(newModel);
+      if (success) {
+        setTrainedModel(newModel);
+        setIsUsingTrainedModel(true);
+        setModelStatus(`Новая модель обучена! Точность: ${newModel.metadata.description}`);
+        loadFromLocalStorage();
+      } else {
+        setModelStatus('Ошибка применения обученной модели');
+      }
+    } catch (error) {
+      console.error('Ошибка обучения:', error);
+      setModelStatus('Ошибка при обучении модели');
+    } finally {
+      setIsTrainingModel(false);
+    }
+  };
+
   // Инициализация при загрузке
   useEffect(() => {
     if (!loadFromLocalStorage()) {
@@ -303,6 +331,14 @@ const NeuralNetwork = ({ pixelData, canvasWidth = 100, canvasHeight = 100 }) => 
         <h4>Управление предобученной моделью</h4>
         
         <div className="model-controls">
+          <button 
+            onClick={handleTrainNewModel}
+            disabled={isTrainingModel}
+            className="train-model-button"
+          >
+            {isTrainingModel ? 'Обучение...' : 'Обучить новую модель'}
+          </button>
+          
           <button 
             onClick={handleLoadTrainedModel}
             className="load-model-button"
