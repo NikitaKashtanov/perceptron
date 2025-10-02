@@ -316,6 +316,58 @@ const NeuralNetwork = ({ pixelData, canvasWidth = 100, canvasHeight = 100 }) => 
     <div className="neural-network">
       <h3>Нейросеть для распознавания цифр</h3>
       
+      {/* Результаты распознавания */}
+      <div className="recognition-section">
+        <div className="recognition-header">
+          <h4>Результаты распознавания:</h4>
+          {!isTrainingMode && (
+            <button onClick={recognize} className="recognize-button">
+              Распознать сейчас
+            </button>
+          )}
+        </div>
+        
+        {Object.keys(predictions).length > 0 ? (
+          <>
+            <div className="predictions-grid">
+              {Object.entries(predictions).map(([digit, confidence]) => (
+                <div key={digit} className="prediction-item">
+                  <span className="digit">{digit}</span>
+                  <div className="confidence-bar">
+                    <div 
+                      className="confidence-fill"
+                      style={{ width: `${confidence * 100}%` }}
+                    ></div>
+                  </div>
+                  <span className="confidence-value">
+                    {(confidence * 100).toFixed(1)}%
+                  </span>
+                </div>
+              ))}
+            </div>
+            
+            <div className="final-prediction">
+              <strong>
+                Распознанная цифра: {
+                  Object.entries(predictions).reduce((max, [digit, confidence]) => 
+                    confidence > max.confidence ? { digit, confidence } : max, 
+                    { digit: '?', confidence: 0 }
+                  ).digit
+                }
+              </strong>
+            </div>
+          </>
+        ) : (
+          <div className="no-prediction">
+            {isTrainingMode ? (
+              <p>Режим обучения активен. Распознавание отключено.</p>
+            ) : (
+              <p>Нарисуйте цифру на канвасе для распознавания.</p>
+            )}
+          </div>
+        )}
+      </div>
+      
       {/* Режим обучения */}
       <div className="training-section">
         <div className="training-controls">
@@ -462,58 +514,6 @@ const NeuralNetwork = ({ pixelData, canvasWidth = 100, canvasHeight = 100 }) => 
               <li><strong>Размер канваса:</strong> {trainedModel.metadata.canvasWidth || trainedModel.metadata.canvasSize}x{trainedModel.metadata.canvasHeight || trainedModel.metadata.canvasSize}</li>
               <li><strong>Всего пикселей:</strong> {trainedModel.metadata.totalPixels}</li>
             </ul>
-          </div>
-        )}
-      </div>
-
-      {/* Результаты распознавания */}
-      <div className="recognition-section">
-        <div className="recognition-header">
-          <h4>Результаты распознавания:</h4>
-          {!isTrainingMode && (
-            <button onClick={recognize} className="recognize-button">
-              Распознать сейчас
-            </button>
-          )}
-        </div>
-        
-        {Object.keys(predictions).length > 0 ? (
-          <>
-            <div className="predictions-grid">
-              {Object.entries(predictions).map(([digit, confidence]) => (
-                <div key={digit} className="prediction-item">
-                  <span className="digit">{digit}</span>
-                  <div className="confidence-bar">
-                    <div 
-                      className="confidence-fill"
-                      style={{ width: `${confidence * 100}%` }}
-                    ></div>
-                  </div>
-                  <span className="confidence-value">
-                    {(confidence * 100).toFixed(1)}%
-                  </span>
-                </div>
-              ))}
-            </div>
-            
-            <div className="final-prediction">
-              <strong>
-                Распознанная цифра: {
-                  Object.entries(predictions).reduce((max, [digit, confidence]) => 
-                    confidence > max.confidence ? { digit, confidence } : max, 
-                    { digit: '?', confidence: 0 }
-                  ).digit
-                }
-              </strong>
-            </div>
-          </>
-        ) : (
-          <div className="no-prediction">
-            {isTrainingMode ? (
-              <p>Режим обучения активен. Распознавание отключено.</p>
-            ) : (
-              <p>Нарисуйте цифру на канвасе для распознавания.</p>
-            )}
           </div>
         )}
       </div>
