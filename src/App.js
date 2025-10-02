@@ -64,13 +64,13 @@ function App() {
           onPixelDataChange={handlePixelDataChange}
         />
 
-        <PixelProcessor 
+        <NeuralNetwork 
           pixelData={pixelData} 
           canvasWidth={canvasWidth} 
           canvasHeight={canvasHeight} 
         />
 
-        <NeuralNetwork 
+        <PixelProcessor 
           pixelData={pixelData} 
           canvasWidth={canvasWidth} 
           canvasHeight={canvasHeight} 
