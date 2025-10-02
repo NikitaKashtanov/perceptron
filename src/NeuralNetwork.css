@@ -166,6 +166,123 @@
   transform: translateY(-1px);
 }
 
+.model-management-section {
+  margin: 20px 0;
+  padding: 20px;
+  background-color: white;
+  border-radius: 8px;
+  border: 1px solid #dee2e6;
+}
+
+.model-management-section h4 {
+  margin-bottom: 15px;
+  color: #495057;
+  font-size: 1.2em;
+  text-align: center;
+}
+
+.model-controls {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.load-model-button, .use-model-button, .save-model-button, .restore-backup-button {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 14px;
+}
+
+.load-model-button {
+  background-color: #17a2b8;
+  color: white;
+}
+
+.load-model-button:hover {
+  background-color: #138496;
+  transform: translateY(-1px);
+}
+
+.use-model-button {
+  background-color: #28a745;
+  color: white;
+}
+
+.use-model-button:hover:not(:disabled) {
+  background-color: #218838;
+  transform: translateY(-1px);
+}
+
+.use-model-button:disabled {
+  background-color: #6c757d;
+  cursor: not-allowed;
+}
+
+.save-model-button {
+  background-color: #ffc107;
+  color: #212529;
+}
+
+.save-model-button:hover {
+  background-color: #e0a800;
+  transform: translateY(-1px);
+}
+
+.restore-backup-button {
+  background-color: #6f42c1;
+  color: white;
+}
+
+.restore-backup-button:hover {
+  background-color: #5a32a3;
+  transform: translateY(-1px);
+}
+
+.model-status {
+  margin: 15px 0;
+  padding: 10px;
+  background-color: #f8f9fa;
+  border-radius: 6px;
+  border-left: 4px solid #007bff;
+  font-size: 14px;
+}
+
+.model-status.using-trained {
+  background-color: #d4edda;
+  border-left-color: #28a745;
+  color: #155724;
+}
+
+.model-info {
+  margin-top: 15px;
+  padding: 15px;
+  background-color: #e7f3ff;
+  border-radius: 6px;
+  border: 1px solid #b8daff;
+}
+
+.model-info h5 {
+  margin-bottom: 10px;
+  color: #004085;
+  font-size: 1.1em;
+}
+
+.model-info ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.model-info li {
+  margin: 5px 0;
+  color: #004085;
+  font-size: 14px;
+}
+
 .recognition-section {
   margin: 20px 0;
   padding: 15px;

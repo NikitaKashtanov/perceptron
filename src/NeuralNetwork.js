@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { loadTrainedModel, saveModelToFile, applyTrainedModel, restoreBackupModel, isModelCompatible } from './modelUtils';
 import './NeuralNetwork.css';
 
 const NeuralNetwork = ({ pixelData, canvasWidth = 100, canvasHeight = 100 }) => {
@@ -9,6 +10,9 @@ const NeuralNetwork = ({ pixelData, canvasWidth = 100, canvasHeight = 100 }) => 
   const [predictions, setPredictions] = useState({});
   const [trainingHistory, setTrainingHistory] = useState([]);
   const [learningRate, setLearningRate] = useState(0.01);
+  const [trainedModel, setTrainedModel] = useState(null);
+  const [isUsingTrainedModel, setIsUsingTrainedModel] = useState(false);
+  const [modelStatus, setModelStatus] = useState('');
 
   const totalPixels = canvasWidth * canvasHeight;
 
@@ -144,6 +148,67 @@ const NeuralNetwork = ({ pixelData, canvasWidth = 100, canvasHeight = 100 }) => 
       initializeWeights();
       setTrainingHistory([]);
       setPredictions({});
+      setIsUsingTrainedModel(false);
+      setModelStatus('');
+    }
+  };
+
+  // Загрузка предобученной модели
+  const handleLoadTrainedModel = async () => {
+    setModelStatus('Загрузка модели...');
+    const modelData = await loadTrainedModel();
+    
+    if (!modelData) {
+      setModelStatus('Ошибка загрузки модели');
+      return;
+    }
+    
+    if (!isModelCompatible(modelData, canvasWidth)) {
+      setModelStatus(`Модель несовместима. Размер канваса: ${canvasWidth}x${canvasHeight}, модель: ${modelData.metadata.canvasSize}x${modelData.metadata.canvasSize}`);
+      return;
+    }
+    
+    setTrainedModel(modelData);
+    setModelStatus(`Модель загружена: ${modelData.metadata.description}`);
+  };
+
+  // Применение предобученной модели
+  const handleUseTrainedModel = () => {
+    if (!trainedModel) {
+      setModelStatus('Сначала загрузите модель');
+      return;
+    }
+    
+    const success = applyTrainedModel(trainedModel);
+    if (success) {
+      setIsUsingTrainedModel(true);
+      setModelStatus('Предобученная модель применена');
+      // Перезагружаем веса из localStorage
+      loadFromLocalStorage();
+    } else {
+      setModelStatus('Ошибка применения модели');
+    }
+  };
+
+  // Сохранение текущей модели в файл
+  const handleSaveModelToFile = () => {
+    try {
+      const modelData = saveModelToFile(weights, biases, canvasWidth);
+      setModelStatus('Модель сохранена в файл');
+    } catch (error) {
+      setModelStatus('Ошибка сохранения модели');
+    }
+  };
+
+  // Восстановление предыдущей модели
+  const handleRestoreBackup = () => {
+    const success = restoreBackupModel();
+    if (success) {
+      setIsUsingTrainedModel(false);
+      setModelStatus('Предыдущая модель восстановлена');
+      loadFromLocalStorage();
+    } else {
+      setModelStatus('Нет резервной копии для восстановления');
     }
   };
 
@@ -231,6 +296,60 @@ const NeuralNetwork = ({ pixelData, canvasWidth = 100, canvasHeight = 100 }) => 
         <button onClick={clearWeights} className="clear-weights-button">
           Очистить веса
         </button>
+      </div>
+
+      {/* Управление предобученной моделью */}
+      <div className="model-management-section">
+        <h4>Управление предобученной моделью</h4>
+        
+        <div className="model-controls">
+          <button 
+            onClick={handleLoadTrainedModel}
+            className="load-model-button"
+          >
+            Загрузить модель из файла
+          </button>
+          
+          <button 
+            onClick={handleUseTrainedModel}
+            disabled={!trainedModel}
+            className="use-model-button"
+          >
+            Использовать обученную модель
+          </button>
+          
+          <button 
+            onClick={handleSaveModelToFile}
+            className="save-model-button"
+          >
+            Сохранить обучение в файл
+          </button>
+          
+          <button 
+            onClick={handleRestoreBackup}
+            className="restore-backup-button"
+          >
+            Восстановить предыдущую модель
+          </button>
+        </div>
+        
+        {modelStatus && (
+          <div className={`model-status ${isUsingTrainedModel ? 'using-trained' : ''}`}>
+            <strong>Статус:</strong> {modelStatus}
+          </div>
+        )}
+        
+        {trainedModel && (
+          <div className="model-info">
+            <h5>Информация о модели:</h5>
+            <ul>
+              <li><strong>Описание:</strong> {trainedModel.metadata.description}</li>
+              <li><strong>Дата создания:</strong> {trainedModel.metadata.created}</li>
+              <li><strong>Размер канваса:</strong> {trainedModel.metadata.canvasSize}x{trainedModel.metadata.canvasSize}</li>
+              <li><strong>Всего пикселей:</strong> {trainedModel.metadata.totalPixels}</li>
+            </ul>
+          </div>
+        )}
       </div>
 
       {/* Результаты распознавания */}
