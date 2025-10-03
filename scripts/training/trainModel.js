@@ -1,6 +1,6 @@
 // Скрипт для обучения нейросети и обновления trainedModel.json
 
-import { trainNeuralNetwork } from './src/neuralNetworkTrainer.js';
+import { trainNeuralNetwork } from '../../src/utils/neuralNetworkTrainer.js';
 import fs from 'fs';
 import path from 'path';
 

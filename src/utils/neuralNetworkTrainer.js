@@ -184,7 +184,7 @@ export const trainNeuralNetwork = async (canvasSize = 30) => {
   console.log('🚀 Начинаем обучение нейросети...');
   
   // Генерируем обучающие данные
-  const { generateTrainingData } = await import('./digitPatterns.js');
+  const { generateTrainingData } = await import('../data/digitPatterns.js');
   const trainingData = generateTrainingData(canvasSize, canvasSize, 5);
   
   console.log(`📊 Создано ${trainingData.length} обучающих примеров`);

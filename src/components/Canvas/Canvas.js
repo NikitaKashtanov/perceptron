@@ -114,7 +114,7 @@ const Canvas = ({ width = 100, height = 100, onPixelDataChange }) => {
 
   return (
     <div className="canvas-container">
-      <h3>Канвас для рисования цифр ({width}x{height})</h3>
+      <h3>Canvas for Drawing Digits ({width}x{height})</h3>
       <canvas
         ref={canvasRef}
         className="drawing-canvas"
@@ -126,15 +126,15 @@ const Canvas = ({ width = 100, height = 100, onPixelDataChange }) => {
       />
       <div className="canvas-controls">
         <button onClick={clearCanvas} className="clear-button">
-          Очистить
+          Clear
         </button>
         <button onClick={updatePixelData} className="analyze-button">
-          Анализировать
+          Analyze
         </button>
       </div>
       <div className="pixel-info">
-        <p>Пикселей: {width * height}</p>
-        <p>Черных пикселей: {pixelData ? pixelData.filter(p => p === 1).length : 0}</p>
+        <p>Pixels: {width * height}</p>
+        <p>Black pixels: {pixelData ? pixelData.filter(p => p === 1).length : 0}</p>
       </div>
     </div>
   );

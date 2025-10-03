@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import Canvas from './Canvas';
-import PixelProcessor from './PixelProcessor';
-import NeuralNetwork from './NeuralNetwork';
+import Canvas from './components/Canvas/Canvas';
+import PixelProcessor from './components/PixelProcessor/PixelProcessor';
+import NeuralNetwork from './components/NeuralNetwork/NeuralNetwork';
 import './App.css';
 
 function App() {
@@ -30,11 +30,11 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <h1>Нейросеть для распознавания символов</h1>
-        <p>Рисуйте цифры на канвасе и анализируйте пиксельные данные</p>
+        <h1>Neural Network for Character Recognition</h1>
+        <p>Draw digits on the canvas and analyze pixel data</p>
         
         <div className="canvas-size-control">
-          <label htmlFor="canvas-width">Ширина канваса: </label>
+          <label htmlFor="canvas-width">Canvas Width: </label>
           <input
             id="canvas-width"
             type="number"
@@ -45,7 +45,7 @@ function App() {
             className="size-input"
           />
           <span>×</span>
-          <label htmlFor="canvas-height">Высота канваса: </label>
+          <label htmlFor="canvas-height">Canvas Height: </label>
           <input
             id="canvas-height"
             type="number"
@@ -55,7 +55,7 @@ function App() {
             onChange={handleCanvasHeightChange}
             className="size-input"
           />
-          <span>пикселей</span>
+          <span>pixels</span>
         </div>
 
         <Canvas 
@@ -77,13 +77,13 @@ function App() {
         />
 
         <div className="info-section">
-          <h3>Инструкции по использованию:</h3>
+          <h3>Usage Instructions:</h3>
           <ul>
-            <li><strong>Рисование:</strong> Рисуйте цифры мышкой на канвасе</li>
-            <li><strong>Обучение:</strong> Включите режим обучения, введите цифру (0-9) и нажмите "Обучить"</li>
-            <li><strong>Распознавание:</strong> Выйдите из режима обучения - нейросеть автоматически распознает цифры</li>
-            <li><strong>Настройки:</strong> Изменяйте размер канваса и скорость обучения</li>
-            <li><strong>Сохранение:</strong> Веса автоматически сохраняются в localStorage</li>
+            <li><strong>Drawing:</strong> Draw digits with your mouse on the canvas</li>
+            <li><strong>Training:</strong> Enable training mode, enter a digit (0-9) and click "Train"</li>
+            <li><strong>Recognition:</strong> Exit training mode - the neural network will automatically recognize digits</li>
+            <li><strong>Settings:</strong> Adjust canvas size and learning rate</li>
+            <li><strong>Saving:</strong> Weights are automatically saved to localStorage</li>
           </ul>
         </div>
       </header>

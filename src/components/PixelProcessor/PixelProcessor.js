@@ -8,7 +8,7 @@ const PixelProcessor = ({ pixelData, canvasWidth = 100, canvasHeight = 100 }) =>
   // Функция анализа пиксельных данных
   const analyzePixels = () => {
     if (!pixelData) {
-      setAnalysisResult('Нет данных для анализа');
+      setAnalysisResult('No data to analyze');
       return;
     }
 
@@ -40,7 +40,7 @@ const PixelProcessor = ({ pixelData, canvasWidth = 100, canvasHeight = 100 }) =>
       density: (density * 100).toFixed(2),
       centerOfMass,
       boundingBox,
-      prediction: 'Анализ готов (нейросеть будет добавлена)',
+      prediction: 'Analysis ready (neural network will be added)',
       confidence: 'N/A'
     };
   };
@@ -119,7 +119,7 @@ const PixelProcessor = ({ pixelData, canvasWidth = 100, canvasHeight = 100 }) =>
 
   return (
     <div className="pixel-processor">
-      <h3>Обработка пиксельных данных</h3>
+      <h3>Pixel Data Processing</h3>
       
       <div className="processor-controls">
         <button 
@@ -127,13 +127,13 @@ const PixelProcessor = ({ pixelData, canvasWidth = 100, canvasHeight = 100 }) =>
           disabled={!pixelData || isProcessing}
           className="process-button"
         >
-          {isProcessing ? 'Обработка...' : 'Анализировать пиксели'}
+          {isProcessing ? 'Processing...' : 'Analyze Pixels'}
         </button>
       </div>
 
       {pixelData && (
         <div className="data-visualization">
-          <h4>Визуализация данных ({canvasWidth}x{canvasHeight})</h4>
+          <h4>Data Visualization ({canvasWidth}x{canvasHeight})</h4>
           <div className="pixel-preview">
             {renderPixelGrid()}
           </div>
@@ -142,36 +142,36 @@ const PixelProcessor = ({ pixelData, canvasWidth = 100, canvasHeight = 100 }) =>
 
       {analysisResult && (
         <div className="analysis-results">
-          <h4>Результаты анализа</h4>
+          <h4>Analysis Results</h4>
           <div className="result-grid">
             <div className="result-item">
-              <span className="label">Всего пикселей:</span>
+              <span className="label">Total Pixels:</span>
               <span className="value">{analysisResult.totalPixels}</span>
             </div>
             <div className="result-item">
-              <span className="label">Черных пикселей:</span>
+              <span className="label">Black Pixels:</span>
               <span className="value">{analysisResult.blackPixels}</span>
             </div>
             <div className="result-item">
-              <span className="label">Плотность:</span>
+              <span className="label">Density:</span>
               <span className="value">{analysisResult.density}%</span>
             </div>
             <div className="result-item">
-              <span className="label">Центр масс:</span>
+              <span className="label">Center of Mass:</span>
               <span className="value">({analysisResult.centerOfMass.x}, {analysisResult.centerOfMass.y})</span>
             </div>
             <div className="result-item">
-              <span className="label">Границы:</span>
+              <span className="label">Bounds:</span>
               <span className="value">
                 {analysisResult.boundingBox.width}x{analysisResult.boundingBox.height}
               </span>
             </div>
             <div className="result-item prediction">
-              <span className="label">Предсказание:</span>
+              <span className="label">Prediction:</span>
               <span className="value">{analysisResult.prediction}</span>
             </div>
             <div className="result-item">
-              <span className="label">Уверенность:</span>
+              <span className="label">Confidence:</span>
               <span className="value">{analysisResult.confidence}</span>
             </div>
           </div>

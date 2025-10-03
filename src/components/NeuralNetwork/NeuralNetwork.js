@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { loadTrainedModel, saveModelToFile, saveModelWithName, applyTrainedModel, restoreBackupModel, isModelCompatible, loadModelByName } from './modelUtils';
-import { trainSimpleNeuralNetwork } from './simpleNeuralNetwork';
-import ModelSelector from './ModelSelector';
+import { loadTrainedModel, saveModelToFile, saveModelWithName, applyTrainedModel, restoreBackupModel, isModelCompatible, loadModelByName } from '../../utils/modelUtils';
+import { trainSimpleNeuralNetwork } from '../../utils/simpleNeuralNetwork';
+import ModelSelector from '../ModelSelector/ModelSelector';
 import './NeuralNetwork.css';
 
 const NeuralNetwork = ({ pixelData, canvasWidth = 100, canvasHeight = 100 }) => {
@@ -146,7 +146,7 @@ const NeuralNetwork = ({ pixelData, canvasWidth = 100, canvasHeight = 100 }) => 
 
   // Очистка весов
   const clearWeights = () => {
-    if (window.confirm('Вы уверены, что хотите очистить все обученные веса?')) {
+    if (window.confirm('Are you sure you want to clear all trained weights?')) {
       localStorage.removeItem('neuralNetwork_weights');
       localStorage.removeItem('neuralNetwork_biases');
       initializeWeights();
@@ -159,18 +159,18 @@ const NeuralNetwork = ({ pixelData, canvasWidth = 100, canvasHeight = 100 }) => 
 
   // Загрузка предобученной модели
   const handleLoadTrainedModel = async () => {
-    setModelStatus('Загрузка модели...');
+    setModelStatus('Loading model...');
     const modelData = await loadTrainedModel();
     
     if (!modelData) {
-      setModelStatus('Ошибка загрузки модели');
+      setModelStatus('Error loading model');
       return;
     }
     
     if (!isModelCompatible(modelData, canvasWidth, canvasHeight)) {
       const modelWidth = modelData.metadata.canvasWidth || modelData.metadata.canvasSize;
       const modelHeight = modelData.metadata.canvasHeight || modelData.metadata.canvasSize;
-      setModelStatus(`Модель несовместима. Размер канваса: ${canvasWidth}x${canvasHeight}, модель: ${modelWidth}x${modelHeight}`);
+      setModelStatus(`Model incompatible. Canvas size: ${canvasWidth}x${canvasHeight}, model: ${modelWidth}x${modelHeight}`);
       return;
     }
     
@@ -181,18 +181,18 @@ const NeuralNetwork = ({ pixelData, canvasWidth = 100, canvasHeight = 100 }) => 
   // Применение предобученной модели
   const handleUseTrainedModel = () => {
     if (!trainedModel) {
-      setModelStatus('Сначала загрузите модель');
+      setModelStatus('Please load a model first');
       return;
     }
     
     const success = applyTrainedModel(trainedModel);
     if (success) {
       setIsUsingTrainedModel(true);
-      setModelStatus('Предобученная модель применена');
+      setModelStatus('Pre-trained model applied');
       // Перезагружаем веса из localStorage
       loadFromLocalStorage();
     } else {
-      setModelStatus('Ошибка применения модели');
+      setModelStatus('Error applying model');
     }
   };
 
@@ -204,7 +204,7 @@ const NeuralNetwork = ({ pixelData, canvasWidth = 100, canvasHeight = 100 }) => 
                              Object.values(weights).some(w => w && w.length > 0);
       
       if (!hasTrainingData) {
-        setModelStatus('Нет данных для сохранения. Сначала обучите модель на примерах.');
+        setModelStatus('No data to save. Please train the model on examples first.');
         return;
       }
       
@@ -219,7 +219,7 @@ const NeuralNetwork = ({ pixelData, canvasWidth = 100, canvasHeight = 100 }) => 
       
     } catch (error) {
       console.error('Ошибка сохранения модели:', error);
-      setModelStatus('Ошибка сохранения модели');
+      setModelStatus('Error saving model');
     }
   };
 
@@ -228,17 +228,17 @@ const NeuralNetwork = ({ pixelData, canvasWidth = 100, canvasHeight = 100 }) => 
     const success = restoreBackupModel();
     if (success) {
       setIsUsingTrainedModel(false);
-      setModelStatus('Предыдущая модель восстановлена');
+      setModelStatus('Previous model restored');
       loadFromLocalStorage();
     } else {
-      setModelStatus('Нет резервной копии для восстановления');
+      setModelStatus('No backup to restore');
     }
   };
 
   // Обучение новой модели
   const handleTrainNewModel = async () => {
     setIsTrainingModel(true);
-    setModelStatus('Обучение модели... Это может занять несколько секунд');
+    setModelStatus('Training model... This may take a few seconds');
     
     try {
       const newModel = await trainSimpleNeuralNetwork(canvasWidth, canvasHeight);
@@ -251,11 +251,11 @@ const NeuralNetwork = ({ pixelData, canvasWidth = 100, canvasHeight = 100 }) => 
         setModelStatus(`Новая модель обучена! Точность: ${newModel.metadata.description}`);
         loadFromLocalStorage();
       } else {
-        setModelStatus('Ошибка применения обученной модели');
+        setModelStatus('Error applying trained model');
       }
     } catch (error) {
       console.error('Ошибка обучения:', error);
-      setModelStatus('Ошибка при обучении модели');
+      setModelStatus('Error during model training');
     } finally {
       setIsTrainingModel(false);
     }
@@ -269,7 +269,7 @@ const NeuralNetwork = ({ pixelData, canvasWidth = 100, canvasHeight = 100 }) => 
     if (!isModelCompatible(modelData, canvasWidth, canvasHeight)) {
       const modelWidth = modelData.metadata.canvasWidth || modelData.metadata.canvasSize;
       const modelHeight = modelData.metadata.canvasHeight || modelData.metadata.canvasSize;
-      setModelStatus(`Модель ${modelName} несовместима с размером канваса ${canvasWidth}x${canvasHeight} (модель: ${modelWidth}x${modelHeight})`);
+      setModelStatus(`Model ${modelName} incompatible with canvas size ${canvasWidth}x${canvasHeight} (model: ${modelWidth}x${modelHeight})`);
       return;
     }
     
@@ -282,13 +282,13 @@ const NeuralNetwork = ({ pixelData, canvasWidth = 100, canvasHeight = 100 }) => 
       setModelStatus(`Загружена модель: ${modelName}`);
       loadFromLocalStorage();
     } else {
-      setModelStatus('Ошибка применения выбранной модели');
+      setModelStatus('Error applying selected model');
     }
   };
 
   // Обработчик обновления списка моделей
   const handleModelRefresh = () => {
-    setModelStatus('Список моделей обновлен');
+    setModelStatus('Model list updated');
   };
 
   // Инициализация при загрузке
@@ -314,15 +314,15 @@ const NeuralNetwork = ({ pixelData, canvasWidth = 100, canvasHeight = 100 }) => 
 
   return (
     <div className="neural-network">
-      <h3>Нейросеть для распознавания цифр</h3>
+      <h3>Neural Network for Digit Recognition</h3>
       
       {/* Результаты распознавания */}
       <div className="recognition-section">
         <div className="recognition-header">
-          <h4>Результаты распознавания:</h4>
+          <h4>Recognition Results:</h4>
           {!isTrainingMode && (
             <button onClick={recognize} className="recognize-button">
-              Распознать сейчас
+              Recognize Now
             </button>
           )}
         </div>
@@ -347,8 +347,8 @@ const NeuralNetwork = ({ pixelData, canvasWidth = 100, canvasHeight = 100 }) => 
             </div>
             
             <div className="final-prediction">
-              <strong>
-                Распознанная цифра: {
+                <strong>
+                Recognized Digit: {
                   Object.entries(predictions).reduce((max, [digit, confidence]) => 
                     confidence > max.confidence ? { digit, confidence } : max, 
                     { digit: '?', confidence: 0 }
@@ -360,9 +360,9 @@ const NeuralNetwork = ({ pixelData, canvasWidth = 100, canvasHeight = 100 }) => 
         ) : (
           <div className="no-prediction">
             {isTrainingMode ? (
-              <p>Режим обучения активен. Распознавание отключено.</p>
+              <p>Training mode is active. Recognition is disabled.</p>
             ) : (
-              <p>Нарисуйте цифру на канвасе для распознавания.</p>
+              <p>Draw a digit on the canvas for recognition.</p>
             )}
           </div>
         )}
@@ -375,20 +375,20 @@ const NeuralNetwork = ({ pixelData, canvasWidth = 100, canvasHeight = 100 }) => 
             onClick={() => setIsTrainingMode(!isTrainingMode)}
             className={`training-toggle ${isTrainingMode ? 'active' : ''}`}
           >
-            {isTrainingMode ? 'Остановить обучение' : 'Режим обучения'}
+            {isTrainingMode ? 'Stop Training' : 'Training Mode'}
           </button>
           
           {isTrainingMode && (
             <div className="training-indicator">
               <span className="indicator-dot"></span>
-              Режим обучения активен
+              Training mode is active
             </div>
           )}
         </div>
         
         {isTrainingMode && (
           <div className="training-input">
-            <label htmlFor="digit-input">Введите цифру (0-9):</label>
+            <label htmlFor="digit-input">Enter digit (0-9):</label>
             <input
               id="digit-input"
               type="text"
@@ -403,7 +403,7 @@ const NeuralNetwork = ({ pixelData, canvasWidth = 100, canvasHeight = 100 }) => 
               disabled={!pixelData || trainingDigit === ''}
               className="train-button"
             >
-              Обучить
+              Train
             </button>
           </div>
         )}
@@ -411,7 +411,7 @@ const NeuralNetwork = ({ pixelData, canvasWidth = 100, canvasHeight = 100 }) => 
 
       {/* Настройки */}
       <div className="settings-section">
-        <label htmlFor="learning-rate">Скорость обучения:</label>
+        <label htmlFor="learning-rate">Learning Rate:</label>
         <input
           id="learning-rate"
           type="range"
@@ -425,7 +425,7 @@ const NeuralNetwork = ({ pixelData, canvasWidth = 100, canvasHeight = 100 }) => 
         <span className="learning-rate-value">{learningRate}</span>
         
         <button onClick={clearWeights} className="clear-weights-button">
-          Очистить веса
+          Clear Weights
         </button>
       </div>
 
@@ -438,7 +438,7 @@ const NeuralNetwork = ({ pixelData, canvasWidth = 100, canvasHeight = 100 }) => 
 
       {/* Управление предобученной моделью */}
       <div className="model-management-section">
-        <h4>Управление предобученной моделью</h4>
+        <h4>Pre-trained Model Management</h4>
         
         <div className="model-controls">
           <button 
@@ -446,14 +446,14 @@ const NeuralNetwork = ({ pixelData, canvasWidth = 100, canvasHeight = 100 }) => 
             disabled={isTrainingModel}
             className="train-model-button"
           >
-            {isTrainingModel ? 'Обучение...' : 'Обучить новую модель'}
+            {isTrainingModel ? 'Training...' : 'Train New Model'}
           </button>
           
           <button 
             onClick={handleLoadTrainedModel}
             className="load-model-button"
           >
-            Загрузить модель из файла
+            Load Model from File
           </button>
           
           <button 
@@ -461,45 +461,45 @@ const NeuralNetwork = ({ pixelData, canvasWidth = 100, canvasHeight = 100 }) => 
             disabled={!trainedModel}
             className="use-model-button"
           >
-            Использовать обученную модель
+            Use Trained Model
           </button>
           
           <button 
             onClick={handleSaveModelToFile}
             className="save-model-button"
           >
-            Сохранить обучение в файл
+            Save Training to File
           </button>
           
           <button 
             onClick={handleRestoreBackup}
             className="restore-backup-button"
           >
-            Восстановить предыдущую модель
+            Restore Previous Model
           </button>
         </div>
         
         {modelStatus && (
           <div className={`model-status ${isUsingTrainedModel ? 'using-trained' : ''}`}>
-            <strong>Статус:</strong> {modelStatus}
+            <strong>Status:</strong> {modelStatus}
           </div>
         )}
 
         {/* Информация о текущей модели */}
         <div className="current-model-info">
-          <h5>Текущая модель:</h5>
+          <h5>Current Model:</h5>
           <div className="model-description">
             {isUsingTrainedModel && trainedModel ? (
               <div className="trained-model-active">
-                <span className="model-type">🤖 Предобученная модель</span>
+                <span className="model-type">🤖 Pre-trained Model</span>
                 <span className="model-desc">{trainedModel.metadata.description}</span>
-                <span className="model-date">Создана: {trainedModel.metadata.created}</span>
+                <span className="model-date">Created: {trainedModel.metadata.created}</span>
               </div>
             ) : (
               <div className="manual-model-active">
-                <span className="model-type">✋ Ручное обучение</span>
-                <span className="model-desc">Модель обучена вручную на ваших примерах</span>
-                <span className="model-examples">Примеров обучения: {trainingHistory.length}</span>
+                <span className="model-type">✋ Manual Training</span>
+                <span className="model-desc">Model trained manually on your examples</span>
+                <span className="model-examples">Training Examples: {trainingHistory.length}</span>
               </div>
             )}
           </div>
@@ -507,12 +507,12 @@ const NeuralNetwork = ({ pixelData, canvasWidth = 100, canvasHeight = 100 }) => 
         
         {trainedModel && (
           <div className="model-info">
-            <h5>Информация о модели:</h5>
+            <h5>Model Information:</h5>
             <ul>
-              <li><strong>Описание:</strong> {trainedModel.metadata.description}</li>
-              <li><strong>Дата создания:</strong> {trainedModel.metadata.created}</li>
-              <li><strong>Размер канваса:</strong> {trainedModel.metadata.canvasWidth || trainedModel.metadata.canvasSize}x{trainedModel.metadata.canvasHeight || trainedModel.metadata.canvasSize}</li>
-              <li><strong>Всего пикселей:</strong> {trainedModel.metadata.totalPixels}</li>
+              <li><strong>Description:</strong> {trainedModel.metadata.description}</li>
+              <li><strong>Created:</strong> {trainedModel.metadata.created}</li>
+              <li><strong>Canvas Size:</strong> {trainedModel.metadata.canvasWidth || trainedModel.metadata.canvasSize}x{trainedModel.metadata.canvasHeight || trainedModel.metadata.canvasSize}</li>
+              <li><strong>Total Pixels:</strong> {trainedModel.metadata.totalPixels}</li>
             </ul>
           </div>
         )}
@@ -521,13 +521,13 @@ const NeuralNetwork = ({ pixelData, canvasWidth = 100, canvasHeight = 100 }) => 
       {/* История обучения */}
       {trainingHistory.length > 0 && (
         <div className="training-history">
-          <h4>История обучения:</h4>
+          <h4>Training History:</h4>
           <div className="history-list">
             {trainingHistory.map((entry, index) => (
               <div key={index} className="history-item">
                 <span className="time">{entry.timestamp}</span>
-                <span className="digit">Цифра: {entry.digit}</span>
-                <span className="pixels">Пикселей: {entry.pixels}</span>
+                <span className="digit">Digit: {entry.digit}</span>
+                <span className="pixels">Pixels: {entry.pixels}</span>
               </div>
             ))}
           </div>

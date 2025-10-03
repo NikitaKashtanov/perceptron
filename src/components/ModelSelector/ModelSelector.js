@@ -15,7 +15,7 @@ const ModelSelector = ({ onModelSelect, selectedModel, onRefresh }) => {
       // Загружаем список моделей из models.json
       const response = await fetch('./models/models.json');
       if (!response.ok) {
-        throw new Error('Не удалось загрузить список моделей');
+        throw new Error('Failed to load model list');
       }
       
       const modelsList = await response.json();
@@ -36,14 +36,14 @@ const ModelSelector = ({ onModelSelect, selectedModel, onRefresh }) => {
           }
         } catch (err) {
           // Модель не найдена, пропускаем
-          console.log(`Модель ${modelInfo.name} не найдена`);
+          console.log(`Model ${modelInfo.name} not found`);
         }
       }
       
       setAvailableModels(models);
     } catch (err) {
       console.error('Ошибка загрузки моделей:', err);
-      setError('Ошибка загрузки списка моделей');
+      setError('Error loading model list');
       setAvailableModels([]);
     } finally {
       setIsLoading(false);
@@ -55,7 +55,7 @@ const ModelSelector = ({ onModelSelect, selectedModel, onRefresh }) => {
     try {
       const response = await fetch(`./models/${modelName}.json`);
       if (!response.ok) {
-        throw new Error(`Не удалось загрузить модель ${modelName}`);
+        throw new Error(`Failed to load model ${modelName}`);
       }
       
       const modelData = await response.json();
@@ -63,7 +63,7 @@ const ModelSelector = ({ onModelSelect, selectedModel, onRefresh }) => {
       setError('');
     } catch (err) {
       console.error('Ошибка загрузки модели:', err);
-      setError(`Ошибка загрузки модели ${modelName}`);
+      setError(`Error loading model ${modelName}`);
     }
   };
 
@@ -83,13 +83,13 @@ const ModelSelector = ({ onModelSelect, selectedModel, onRefresh }) => {
   return (
     <div className="model-selector">
       <div className="model-selector-header">
-        <h4>Выбор модели</h4>
+        <h4>Model Selection</h4>
         <button 
           onClick={handleRefresh} 
           className="refresh-button"
           disabled={isLoading}
         >
-          {isLoading ? '🔄' : '🔄'} Обновить
+          {isLoading ? '🔄' : '🔄'} Refresh
         </button>
       </div>
 
@@ -101,15 +101,15 @@ const ModelSelector = ({ onModelSelect, selectedModel, onRefresh }) => {
 
       {isLoading ? (
         <div className="loading-message">
-          📡 Загрузка списка моделей...
+          📡 Loading model list...
         </div>
       ) : (
         <div className="models-list">
           {availableModels.length === 0 ? (
             <div className="no-models">
-              📭 Нет доступных моделей
+              📭 No available models
               <br />
-              <small>Создайте новую модель с помощью кнопки "Обучить новую модель"</small>
+              <small>Create a new model using the "Train New Model" button</small>
             </div>
           ) : (
             availableModels.map((model) => (
@@ -127,7 +127,7 @@ const ModelSelector = ({ onModelSelect, selectedModel, onRefresh }) => {
                 <div className="model-details">
                   <span className="model-date">📅 {model.metadata.created}</span>
                   <span className="model-size">📏 {model.metadata.canvasWidth || model.metadata.canvasSize}×{model.metadata.canvasHeight || model.metadata.canvasSize}</span>
-                  <span className="model-epochs">🔄 {model.metadata.trainingEpochs} эпох</span>
+                  <span className="model-epochs">🔄 {model.metadata.trainingEpochs} epochs</span>
                 </div>
               </div>
             ))
@@ -137,7 +137,7 @@ const ModelSelector = ({ onModelSelect, selectedModel, onRefresh }) => {
 
       {selectedModel && (
         <div className="selected-model-info">
-          <strong>Выбранная модель:</strong> {selectedModel}
+          <strong>Selected Model:</strong> {selectedModel}
         </div>
       )}
     </div>

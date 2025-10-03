@@ -148,7 +148,7 @@ export const trainSimpleNeuralNetwork = async (canvasWidth = 30, canvasHeight = 
     const height = canvasHeight || canvasWidth;
     
     // Импортируем генератор паттернов
-    const { generateTrainingData } = await import('./digitPatterns.js');
+    const { generateTrainingData } = await import('../data/digitPatterns.js');
     const trainingData = generateTrainingData(canvasWidth, height, 5);
     
     console.log(`📊 Создано ${trainingData.length} примеров`);
