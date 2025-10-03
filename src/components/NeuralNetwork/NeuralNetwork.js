@@ -296,6 +296,24 @@ const NeuralNetwork = ({ pixelData, canvasWidth = 100, canvasHeight = 100 }) => 
     if (!loadFromLocalStorage()) {
       initializeWeights();
     }
+    
+    // Автоматически загружаем модель по умолчанию
+    const loadDefaultModel = async () => {
+      const defaultModelName = 'user-model-2025-10-03T11-05-20';
+      const modelData = await loadModelByName(defaultModelName);
+      
+      if (modelData && isModelCompatible(modelData, canvasWidth, canvasHeight)) {
+        const success = applyTrainedModel(modelData);
+        if (success) {
+          setTrainedModel(modelData);
+          setIsUsingTrainedModel(true);
+          setSelectedModelName(defaultModelName);
+          setModelStatus(`Загружена модель по умолчанию: ${defaultModelName}`);
+        }
+      }
+    };
+    
+    loadDefaultModel();
   }, []);
 
   // Автоматическое распознавание при изменении пикселей
