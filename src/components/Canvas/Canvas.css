@@ -10,9 +10,21 @@
 }
 
 .canvas-container h3 {
-  margin-bottom: 15px;
+  margin-bottom: 10px;
   color: #333;
   font-size: 1.2em;
+}
+
+.canvas-instructions {
+  margin-bottom: 15px;
+  text-align: center;
+  color: #666;
+  font-style: italic;
+}
+
+.canvas-instructions small {
+  font-size: 0.85em;
+  opacity: 0.8;
 }
 
 .drawing-canvas {

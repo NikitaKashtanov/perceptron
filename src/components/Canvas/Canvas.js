@@ -115,6 +115,9 @@ const Canvas = ({ width = 100, height = 100, onPixelDataChange }) => {
   return (
     <div className="canvas-container">
       <h3>Canvas for Drawing Digits ({width}x{height})</h3>
+      <div className="canvas-instructions">
+        <small>💡 Рисуй без наклона, используй все поле (мы не умеем кадрировать)</small>
+      </div>
       <canvas
         ref={canvasRef}
         className="drawing-canvas"
