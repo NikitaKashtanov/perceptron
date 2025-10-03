@@ -299,7 +299,7 @@ const NeuralNetwork = ({ pixelData, canvasWidth = 100, canvasHeight = 100 }) => 
     
     // Автоматически загружаем модель по умолчанию
     const loadDefaultModel = async () => {
-      const defaultModelName = 'user-model-2025-10-03T11-05-20';
+      const defaultModelName = 'user-model-2025-10-03T11-44-09';
       const modelData = await loadModelByName(defaultModelName);
       
       if (modelData && isModelCompatible(modelData, canvasWidth, canvasHeight)) {
